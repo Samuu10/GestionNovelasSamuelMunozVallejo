@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/input_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Título" />
+
+    <EditText
+        android:id="@+id/input_autor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Autor"
+        android:layout_below="@id/input_titulo" />
+
+    <EditText
+        android:id="@+id/input_año"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Año"
+        android:layout_below="@id/input_autor" />
+
+    <EditText
+        android:id="@+id/input_sinopsis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Sinopsis"
+        android:layout_below="@id/input_año" />
+</RelativeLayout>
