@@ -1,16 +1,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondo_azul_claro"
+    tools:ignore="ExtraText">
 
     <TextView
         android:id="@+id/tvTituloNovelas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tus Novelas"
-        android:textSize="20sp"
+        android:text="TUS NOVELAS"
+        android:textSize="30sp"
+        android:textColor="@android:color/black"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="16dp"/>
+        android:padding="40dp"/>
 
     <ListView
         android:id="@+id/list_view_novelas"
@@ -18,10 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTituloNovelas"
         android:layout_above="@id/bottom_buttons"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
 
-    <!-- Botones en la parte inferior -->
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:orientation="horizontal"
@@ -34,18 +39,24 @@
             android:id="@+id/btn_agregar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agregar"/>
+            android:text="Agregar"
+            android:backgroundTint="@color/boton_azul_oscuro"
+            android:textColor="@color/blanco"/>
 
         <Button
             android:id="@+id/btn_eliminar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eliminar"/>
+            android:text="Eliminar"
+            android:backgroundTint="@color/boton_azul_oscuro"
+            android:textColor="@color/blanco"/>
 
         <Button
             android:id="@+id/btn_favoritas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Favoritas"/>
+            android:text="Favoritas"
+            android:backgroundTint="@color/boton_azul_oscuro"
+            android:textColor="@color/blanco"/>
     </LinearLayout>
 </RelativeLayout>

@@ -2,9 +2,11 @@ package com.example.gestionnovelas;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -117,9 +119,19 @@ public class MainActivity extends AppCompatActivity {
 
     //Método para mostrar los detalles de la novela seleccionada
     private void mostrarDetallesNovela(Novela novela) {
+        View dialogView = getLayoutInflater().inflate(R.layout.detalles_novelas, null);
+        TextView tvTitulo = dialogView.findViewById(R.id.tvTitulo);
+        TextView tvAutor = dialogView.findViewById(R.id.tvAutor);
+        TextView tvAnio = dialogView.findViewById(R.id.tvAnio);
+        TextView tvSinopsis = dialogView.findViewById(R.id.tvSinopsis);
+
+        tvTitulo.setText(novela.getTitulo());
+        tvAutor.setText("Autor: " + novela.getAutor());
+        tvAnio.setText("Año: " + novela.getAñoPublicacion());
+        tvSinopsis.setText("Sinopsis: " + novela.getSinopsis());
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(novela.getTitulo());
-        dialogBuilder.setMessage("Autor: " + novela.getAutor() + "\nAño: " + novela.getAñoPublicacion() + "\nSinopsis: " + novela.getSinopsis());
+        dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(novela.getFavorito() ? "Desmarcar Favorito" : "Marcar Favorito", (dialog, which) -> {
             novela.setFavorito(!novela.getFavorito());
             Toast.makeText(this, novela.getFavorito() ? "Marcado como favorito" : "Desmarcado de favoritos", Toast.LENGTH_SHORT).show();
@@ -129,15 +141,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarFavoritas() {
-        ArrayList<String> favoritas = new ArrayList<>();
-        for (Novela novela : repositorio.obtenerNovelasFavoritas()) {
-            favoritas.add(novela.getTitulo());
-        }
+        ArrayList<Novela> favoritas = repositorio.obtenerNovelasFavoritas();
+
+        View dialogView = getLayoutInflater().inflate(R.layout.novelas_favoritas, null);
+        ListView listViewFavoritas = dialogView.findViewById(R.id.list_view_favoritas);
+        ArrayAdapter<String> adapterFavoritas = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                obtenerTitulosFavoritas(favoritas));
+        listViewFavoritas.setAdapter(adapterFavoritas);
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Favoritas");
-        dialogBuilder.setItems(favoritas.toArray(new String[0]), null);
+        dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton("Volver", null);
         dialogBuilder.create().show();
     }
+
+    private String[] obtenerTitulosFavoritas(ArrayList<Novela> favoritas) {
+        String[] titulos = new String[favoritas.size()];
+        for (int i = 0; i < favoritas.size(); i++) {
+            titulos[i] = favoritas.get(i).getTitulo();
+        }
+        return titulos;
+    }
+
 }
