@@ -19,15 +19,14 @@ public class AdaptadorNovela extends ArrayAdapter<Novela> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Obtener la novela actual
+        //Obtener la novela actual
         Novela novela = getItem(position);
 
-        // Inflar el layout personalizado si no está reutilizado
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.novela_item, parent, false);
         }
 
-        // Referenciar los TextViews y asignar valores
+        //Referenciar los TextViews y asignar valores
         TextView tvTitulo = convertView.findViewById(R.id.tvTitulo);
         TextView tvAutor = convertView.findViewById(R.id.tvAutor);
 

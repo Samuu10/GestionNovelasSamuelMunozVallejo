@@ -1,10 +1,7 @@
 package com.example.gestionnovelas;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,34 +23,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inicializar componentes
+        //Inicializar componentes
         listViewNovelas = findViewById(R.id.list_view_novelas);
         btnAgregar = findViewById(R.id.btn_agregar);
         btnEliminar = findViewById(R.id.btn_eliminar);
         btnFavoritas = findViewById(R.id.btn_favoritas);
 
-        // Inicializar la lista de novelas y el repositorio
+        //Inicializar la lista de novelas y el repositorio
         listaNovelas = new ArrayList<>();
         adapter = new AdaptadorNovela(this, listaNovelas);
         listViewNovelas.setAdapter(adapter);
         repositorio = new RepositorioNovela(this, adapter);
 
-        // Añadir novela
+        //Añadir novela
         btnAgregar.setOnClickListener(v -> mostrarDialogoAgregarNovela());
 
-        // Eliminar novela
+        //Eliminar novela
         btnEliminar.setOnClickListener(v -> mostrarDialogoEliminarNovela());
 
-        // Ver detalles de la novela seleccionada
+        //Ver detalles de la novela seleccionada
         listViewNovelas.setOnItemClickListener((adapterView, view, position, id) -> {
             Novela novela = listaNovelas.get(position);
             mostrarDetallesNovela(novela);
         });
 
-        // Botón para ver novelas favoritas
+        //Botón para ver novelas favoritas
         btnFavoritas.setOnClickListener(v -> mostrarFavoritas());
     }
 
+    //Método para mostrar el diálogo de agregar novela
     private void mostrarDialogoAgregarNovela() {
         View dialogView = getLayoutInflater().inflate(R.layout.agregar_novela, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -81,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.create().show();
     }
 
+    //Método para mostrar el diálogo de eliminar novela
     private void mostrarDialogoEliminarNovela() {
         View dialogView = getLayoutInflater().inflate(R.layout.eliminar_novela, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -90,14 +89,23 @@ public class MainActivity extends AppCompatActivity {
 
         dialogBuilder.setTitle("Eliminar");
         dialogBuilder.setPositiveButton("Eliminar", (dialogInterface, i) -> {
-            String titulo = tituloInput.getText().toString();
-            int index = listaNovelas.indexOf(titulo);
-            if (index != -1) {
-                repositorio.eliminarNovela(index);
-                listaNovelas.remove(index);
-                adapter.notifyDataSetChanged();
-                Toast.makeText(this, "Novela eliminada", Toast.LENGTH_SHORT).show();
-            } else {
+            String titulo = tituloInput.getText().toString().trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+            boolean encontrada = false;
+
+            // Bucle para encontrar el título insensible a mayúsculas
+            for (int index = 0; index < listaNovelas.size(); index++) {
+                Novela novela = listaNovelas.get(index);
+                if (novela.getTitulo().trim().toLowerCase().equals(titulo)) {
+                    repositorio.eliminarNovela(index); // Eliminar del repositorio
+                    listaNovelas.remove(index);        // Eliminar de la lista visual
+                    adapter.notifyDataSetChanged();    // Actualizar la lista
+                    encontrada = true;
+                    Toast.makeText(this, "Novela eliminada", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+
+            if (!encontrada) {
                 Toast.makeText(this, "Novela no encontrada", Toast.LENGTH_SHORT).show();
             }
         });
@@ -106,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.create().show();
     }
 
+
+    //Método para mostrar los detalles de la novela seleccionada
     private void mostrarDetallesNovela(Novela novela) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle(novela.getTitulo());

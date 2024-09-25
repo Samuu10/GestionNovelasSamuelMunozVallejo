@@ -22,9 +22,6 @@ public class RepositorioNovela {
         listaNovelas.remove(index);
     }
 
-    public Novela obtenerDetallesNovela(int index) {
-        return listaNovelas.get(index);
-    }
 
     public ArrayList<Novela> obtenerNovelasFavoritas() {
         ArrayList<Novela> favoritas = new ArrayList<>();
