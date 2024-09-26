@@ -21,7 +21,6 @@ public class AdaptadorNovela extends ArrayAdapter<Novela> {
         //Obtener la novela actual
         Novela novela = getItem(position);
 
-
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.novela_item, parent, false);
         }

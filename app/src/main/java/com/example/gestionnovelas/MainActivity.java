@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Método para mostrar el diálogo de agregar novela
     private void mostrarDialogoAgregarNovela() {
-        //Crear el diálogo (un dialogo es una ventana que se muestra en pantalla)
+        //Crear el diálogo (un diálogo es una ventana que se muestra en pantalla)
         View dialogView = getLayoutInflater().inflate(R.layout.agregar_novela, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setView(dialogView);
@@ -68,22 +68,49 @@ public class MainActivity extends AppCompatActivity {
         EditText añoInput = dialogView.findViewById(R.id.input_año);
         EditText sinopsisInput = dialogView.findViewById(R.id.input_sinopsis);
 
-        //Configurar el diálogo
-        dialogBuilder.setTitle("Agregar");
-        dialogBuilder.setPositiveButton("Agregar", (dialogInterface, i) -> {
-            String titulo = tituloInput.getText().toString();
-            String autor = autorInput.getText().toString();
-            int año = Integer.parseInt(añoInput.getText().toString());
-            String sinopsis = sinopsisInput.getText().toString();
+        //Crear y configurar el diálogo con botones personalizados
+        AlertDialog dialog = dialogBuilder.setTitle("Agregar").setPositiveButton("Agregar", null)
+                .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
+                .create();
 
-            Novela nuevaNovela = new Novela(titulo, autor, año, sinopsis);
-            repositorio.agregarNovela(nuevaNovela);
-            listaNovelas.add(nuevaNovela);
-            adapter.notifyDataSetChanged();
+        //Mostrar el diálogo y establecer un Listener para el botón de "Agregar"
+        dialog.setOnShowListener(dialogInterface -> {
+            Button botonAgregar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            botonAgregar.setOnClickListener(view -> {
+                //Obtener los valores de los campos de texto
+                String titulo = tituloInput.getText().toString();
+                String autor = autorInput.getText().toString();
+                String añoTexto = añoInput.getText().toString();
+                String sinopsis = sinopsisInput.getText().toString();
+
+                //Validación del campo "Año"
+                int año;
+                try {
+                    año = Integer.parseInt(añoTexto);
+                } catch (NumberFormatException e) {
+                    //Mostrar mensaje de error y permitir al usuario corregir el campo
+                    Toast.makeText(this, "Por favor, introduce un año válido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //Validar que los campos no estén vacíos
+                if (titulo.isEmpty() || autor.isEmpty() || sinopsis.isEmpty()) {
+                    Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Novela nuevaNovela = new Novela(titulo, autor, año, sinopsis);
+                repositorio.agregarNovela(nuevaNovela);
+                listaNovelas.add(nuevaNovela);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();  //Cerrar el diálogo solo si se agregó correctamente
+            });
         });
-        dialogBuilder.setNegativeButton("Cancelar", null);
-        dialogBuilder.create().show();
+
+        //Mostrar el diálogo
+        dialog.show();
     }
+
 
     //Método para mostrar el diálogo de eliminar novela
     private void mostrarDialogoEliminarNovela() {
@@ -98,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         //Configurar el diálogo
         dialogBuilder.setTitle("Eliminar");
         dialogBuilder.setPositiveButton("Eliminar", (dialogInterface, i) -> {
-            String titulo = tituloInput.getText().toString().trim().toLowerCase(); // Quitar espacios y convertir a minúsculas
+            String titulo = tituloInput.getText().toString().trim().toLowerCase();
             boolean encontrada = false;
 
             // Bucle para encontrar el título (ignorando mayúsculas y minúsculas)
